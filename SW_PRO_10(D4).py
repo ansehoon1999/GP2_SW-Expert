@@ -3,48 +3,48 @@ T = int(input())
 for test_case in range(1, T + 1):
     xmin, ymin, xmax, ymax = map(int, input().split())
     x1, y1, x2, y2 = map(int, input().split())
-
+    line = []
+    result = []
+    new = []
     count = 0
 
     if x1 == x2 :
         if xmin == x1 :
-            print('##1')
+            print('##1') # x=0 과 일치
             count = 4
         elif xmax == x1 :
-            print('##2')
+            print('##2') # x=xmax와 일치
             count = 4
-        elif y1 <= ymin <= y2 and y1 <= ymax <= y2 :
-            print('##3')
-            count=2
-        elif y1 <= ymin <= y2 and ((y1 <= ymax <= y2) == False) :
-            print('##4')
-            count = 1
-        elif ((y1 <= ymin <= y2) == False) and y1 <= ymax <= y2 :
-            print('##5')
-            count = 1
-        elif ((y1 <= ymin <= y2) == False) and ((y1 <= ymax <= y2) == False) :
-            print('##6')
-            count = 0
+
+        else :
+            
+            line.append([x1, ymin])
+            line.append([x1, ymax])
+            for i in range(2) :
+                if xmin <= line[i][0] <= xmax and ((y1 <= line[i][1] <= y2) or (y2 <= line[i][1] <= y1)) and (ymin <= line[i][1] <= ymax) :
+                    result.append(line[i])
+
+            print(result)
+            count = len(result)
+        
+        
     elif y1 == y2 :
         if ymin == y1 :
-            print('##7')
+            print('##7')# y=0 과 일치
             count = 4
-        elif ymax == y1 :
+        elif ymax == y1 : # y=ymax와 일치
             print('##8')
             count = 4
-        elif x1 <= xmin <= x2 and x1 <= xmax <= x2 :
-            print('##9')
-            count=2
-        elif x1 <= xmin <= x2 or ((x1 <= xmax <= x2) == False) :
-            print('##10')
-            count = 1
-        elif ((x1 <= xmin <= x2) == False) or x1 <= xmax <= x2 :
-            print('##11')
-            count = 1
-        elif ((x1 <= xmin <= x2) == False) or ((x1 <= xmax <= x2) == False) :
-            print('##12')
-            count = 1
+        else :
             
+            line.append([xmin, y1])
+            line.append([xmax, y1])
+            for i in range(2) :
+                if ymin <= line[i][1] <= ymax and ((x1 <= line[i][0] <= x2) or (x2 <= line[i][0] <= x1)) and (xmin <= line[i][0] <= xmax) :
+                    result.append(line[i])
+
+            print(result)
+            count = len(result)
 
     else :
         
@@ -53,18 +53,29 @@ for test_case in range(1, T + 1):
         
         b = y1 - weight * x1
         print(b)
+
         
-        if (y1<= weight * xmin + b <=y2 or y2 <= weight * xmin + b <=y1) and (ymin <= weight * xmin +b <= ymax) :
-            count = count + 1
+        
+        
+        line.append([xmin, weight * xmin + b])
+        line.append([xmax, weight * xmax + b])
+        line.append([(ymin - b)/weight, ymin])
+        line.append([(ymax - b)/weight, ymax])
+        
+        print(line)
+        for i in range(4) :
+            if ((x1 <= line[i][0] <= x2) or (x2 <= line[i][0] <= x1)) and xmin <= line[i][0] <= xmax and ymin <= line[i][1] <= ymax and ((y1 <= line[i][1] <= y2) or (y2 <= line[i][1] <= y1)) :
+                result.append(line[i])
+                
 
-        if (y1<= weight * xmax + b <=y2 or y2 <= weight * xmax + b <=y1) and (ymin <= weight * xmax + b <= ymax) :
-            count = count + 1
+        
+        for v in result :
+            if v not in new :
+                new.append(v)
 
-        if (x1<= (ymin - b)/weight <=x2 or x2 <= (ymin - b)/weight <=x1) and (xmin <= (ymin - b)/weight <= xmax) :
-            count = count + 1
-
-        if (x1<= (ymax - b)/weight <=x2 or x2 <= (ymax - b)/weight <=x1) and (xmin <= (ymax - b)/weight <= xmax) :
-            count = count + 1
+        count = len(new)
+        
+        
             
 
 
